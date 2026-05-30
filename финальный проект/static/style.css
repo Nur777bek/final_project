@@ -1,0 +1,409 @@
+/* ГЛОБАЛЬНЫЙ СБРОС: теперь padding и border не раздувают элементы в ширину */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Inter, sans-serif;
+    margin: 0;
+    width: 100%;
+    background: #f5f5f5;
+    color: #1f1f1f;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    z-index: 1000; /* Чтобы шапка всегда была поверх контента */
+}
+
+/* layout */
+.container {
+    margin: 80px auto 0; /* Центрируем контейнер на больших экранов */
+    width:100%;
+    max-width: 1400px;
+    display: flex;
+    gap: 24px;
+    padding: 24px;
+}
+
+/* ИСПРАВЛЕНО: используем flex: 1 вместо width: 50% для идеального деления пополам */
+.left, .right {
+    flex: 1;
+    min-width: 0; /* Позволяет внутреннему контенту (графикам) сжиматься */
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+/* блоки */
+.slider-block {
+    margin-bottom: 32px;
+}
+
+.slider-container {
+    flex: 1;
+}
+
+.range-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+}
+
+.slider-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* значение */
+.slider-row-span {
+    min-width: 50px;
+    text-align: center;
+    font-weight: bold;
+    padding: 6px 12px;
+    border: 1px solid grey;
+    border-radius: 10px;
+    background: #ffffff;
+}
+
+/* слайдер */
+input[type=range] { 
+    -webkit-appearance: none;
+    width: 100%;
+    accent-color: #22c55e;
+    height: 8px;
+    border-radius: 5px;
+    background: #ddd;
+    outline: none;
+}
+
+/* кружок */
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    background: #27ae60;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -1px;
+}
+
+/* ИСПРАВЛЕНО: Свойства для холодильника теперь не ломают ширину */
+#fridge {
+    width: 100%;
+    margin-left: 0;
+}
+
+/* select */
+.form-select {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 16px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    background-color: #fff;
+
+    /* Убираем стандартную стрелку */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    /* Кастомная стрелка */
+    background-image: url("data:image/svg+xml;charset=UTF-8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+    background-repeat: no-repeat;
+    background-size: 14px;
+    background-position: right 25px center; /* Сдвиг стрелки */
+
+    padding-right: 65px; 
+    
+    /* Магия сжатия текста */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.form-select:focus {
+    border-color: #28a745;
+    outline: 0;
+}
+
+button {
+    background: #16a34a;
+    color: white;
+    border: none;
+    padding: 18px;
+    border-radius: 14px;
+    width: 100%;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #15803d;
+}
+
+#energyChart {
+    max-width: 220px;
+    max-height: 220px;
+    margin-left: 0;
+    width: 100%; /* Чтобы график был адаптивным */
+}
+
+.chart-container {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+/* Адаптивность для графика и легенды на средних экранах */
+@media (max-width: 1100px) {
+    .chart-container {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+.result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    text-align: center;
+}
+
+.result-grid h2 {
+    font-size: 52px;
+    margin-top: 10px;
+}
+
+.green {
+    color: #22c55e;
+}
+
+.stats {
+    display: flex;
+    width: 100%; /* Изменено с 95% для выравнивания */
+    justify-content: space-between;
+    gap: 20px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid rgb(203, 203, 203);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid rgb(203, 203, 203);
+}
+
+.stat-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    align-items: center;
+    text-align: center;
+}
+
+.stat-item span {
+    color: #777;
+    font-size: 14px;
+}
+
+.stat-item:first-child {
+    border-right: 1px solid grey;
+    padding-right: 20px;
+}
+
+.stat-item:last-child {
+    padding-left: 20px;
+}
+
+.stat-item strong {
+    font-size: 40px;
+    color: #22a652;
+}
+
+.legend {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.legend-item {
+    display: flex;
+    justify-content: space-between; /* Распихивает левую и правую части по краям */
+    align-items: center;
+    padding: 6px 8px;
+    border-radius: 6px;
+    transition: 0.2s;
+    width: 100%;
+}
+
+.legend-item:hover {
+    background: #f5f5f5;
+}
+
+.left-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.name {
+    font-size: 20px;
+    color: #333;
+}
+
+/* ИСПРАВЛЕНО: Убран жесткий маргин, добавлена защита от переноса строк */
+.right-card {
+    font-weight: 500;
+    font-size: 20px;
+    color: #555;
+    white-space: nowrap; 
+    margin-left: 15px; /* Минимальный зазор между текстом и цифрами */
+}
+
+/* кружки */
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+/* цвета */
+.green { background: #22a652; }
+.blue { background: #2d7ff9; }
+.orange { background: #f39c12; }
+.purple { background: #7d5fff; }
+
+/* мобильная версия */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        padding: 12px;
+    }
+
+    .left, .right {
+        width: 100%;
+    }
+    
+    .stats {
+        flex-direction: column; /* На телефонах плашки "в день / в месяц" встанут друг под друга */
+        gap: 15px;
+    }
+    
+    .stat-item:first-child {
+        border-right: none;
+        border-bottom: 1px solid grey;
+        padding-right: 0;
+        padding-bottom: 15px;
+    }
+    
+    .stat-item:last-child {
+        padding-left: 0;
+    }
+}
+
+/* Контейнер всей карточки совета */
+.advice-card {
+    background: #ffffff;
+    margin-top: 25px;
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid #eef2f6;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+/* Заголовок с иконкой лампочки */
+.advice-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.advice-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f1f1f;
+}
+
+.advice-icon {
+    font-size: 20px;
+}
+
+/* Текст самого совета */
+.advice-text {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #4b5563;
+    margin: 0 0 20px 0;
+}
+
+/* Внутренний серый блок со статистикой сравнения */
+.comparison-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+/* Строка внутри сравнения */
+.comparison-row {
+    display: flex;
+    justify-content: space-between; /* Распихивает текст и цифры по краям */
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed #e2e8f0;
+}
+
+.comparison-row.last-row {
+    border-bottom: none; /* У последней строчки убираем разделитель */
+    padding-bottom: 0;
+}
+
+.comparison-row:first-child {
+    padding-top: 0;
+}
+
+.comparison-label {
+    font-size: 14px;
+    color: #64748b;
+}
+
+.comparison-value {
+    font-weight: 600;
+    font-size: 15px;
+    color: #0f172a;
+}
+
+/* Цветные аккуратные бэджи для статуса */
+.status-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Зеленый бэдж (если расход ниже среднего) */
+.badge-green {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+/* Красный бэдж (если расход выше среднего) */
+.badge-red {
+    background-color: #fee2e2;
+    color: #991b1b;
+}

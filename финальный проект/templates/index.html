@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Energy Survey</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='style.css')}}">
+</head>
+<body>  <main>
+    {% block content %}
+    <div class="header">
+        <h1 style="margin-left:15px ;"> Опрос энергопотребления</h1>
+    </div>
+<div class="container">
+
+    <!-- Левая часть -->
+    <div class="left">
+        <form method="POST"> 
+            <!-- Лампочки -->
+
+            <div class="slider-block">
+                <label>💡 <b>1.Освещение</b> </label>
+                <p>Количество лампочек</p>
+                <div class="slider-row">
+                    <div class="slider-container">
+                        <input type="range" id="lamp_count" name="lamp_count" min="0" max="20" step="1" value="5">
+                        <div class="range-labels">
+                            <span>0</span>
+                            <span>20</span>
+                        </div>
+                    </div>
+                    <span id="lamp_val" class = "slider-row-span">5</span>
+                </div>
+
+                <p>Часы работы освещения в день</p>
+                <div class="slider-row">
+                    <div class="slider-container">
+                        <input type="range" id="bulb_hours" name="lamp_hours" min="0" max="12" step="0.5" value="3">
+                        <div class="range-labels">
+                            <span>0</span>
+                            <span>12</span>
+                        </div>
+                    </div>
+                    <span id="bulb_val" class = "slider-row-span">3 </span>
+                </div>
+            </div>
+            <hr>
+
+            <!-- ТВ -->
+            <div class="slider-block">
+                <label>📺 <b>2.Телевизор</b></label>
+                <p>Сколько часов телевизор работает в день</p>
+                <div class="slider-row">
+                    <div class="slider-container">
+                        <input type="range" id="tv_hours" name="tv_hours" min="0" max="12" step="0.5" value="2">
+                        <div class="range-labels">
+                            <span>0</span>
+                            <span>12</span>
+                        </div>
+                    </div>
+                    <span id="tv_val" class = "slider-row-span">2</span>
+                </div>
+            </div>
+            <hr>
+
+            <!-- ПК -->
+            <div class="slider-block">
+                <p>💻 <b>3.Компьютер</b></p>
+                <p>Сколько часов компьютер работает в день</p>
+                <div class="slider-row">
+                    <div class="slider-container">
+                        <input type="range" id="pc_hours" name="pc_hours" min="0" max="12" step="0.5" value="4">
+                        <div class="range-labels">
+                            <span>0</span>
+                            <span>12</span>
+                        </div>
+                    </div>
+                    <span id="pc_val" class = "slider-row-span">4</span>
+                </div>
+            </div>
+            <hr>
+
+            <!-- Холодильник -->
+            <div class="slider-block">
+                <label>❄️<b>4.Холодильник</b></label><br>
+                <span>Используете холодильник?</span>
+                <select id="fridge" name="fridge_on" class="form-select">
+                    <option value="1">Да</option>
+                    <option value="0">Нет</option>
+                </select>
+            </div>
+            <button type="submit">Рассчитать потребление</button>
+        </form>
+    </div>
+  
+    <!-- Правая часть -->
+    <div class="right">
+        
+        <div class="card">
+
+            <h2 style="margin-bottom:20px;">
+                ⚡ Ваш результат
+            </h2>
+
+            <div class="stats">
+                <div class="stat-item">
+                    <span>Потребление в день</span>
+                    <strong>{{ total }} кВт·ч</strong>
+                </div>
+
+                <div class="stat-item">
+                    <span>Потребление в месяц</span>
+                    <strong>{{ total_month}} кВт</strong>
+                </div>
+            </div>
+            <br>
+            <div class="stats">
+                <div class="card">
+                    <h2>Потребление по приборам</h2>
+
+                    <div class="chart-container">
+
+                        <canvas id="energyChart"></canvas>
+
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="left-card">
+                                <span class="dot green"></span>
+                                <span class="name">Освещение</span>
+                                </div>
+                                <div class="right-card">{{lamp_energy}} кВт·ч ({{lamp_percent}}%)</div>
+                            </div>
+
+                            <div class="legend-item">
+                                <div class="left-card">
+                                <span class="dot blue"></span>
+                                <span class="name">Телевизор</span>
+                                </div>
+                                <div class="right-card">{{tv_energy}} кВт·ч ({{tv_percent}}%)</div>
+                            </div>
+
+                            <div class="legend-item">
+                                <div class="left-card">
+                                <span class="dot orange"></span>
+                                <span class="name">Компьютер</span>
+                                </div>
+                                <div class="right-card">{{pc_energy}} кВт·ч ({{pc_percent}}%)</div>
+                            </div>
+
+                            <div class="legend-item">
+                                <div class="left-card">
+                                <span class="dot purple"></span>
+                                <span class="name">Холодильник</span>
+                                </div>
+                                <div class="right-card">{{fridge_energy}} кВт·ч ({{fridge_percent}}%)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="advice-card">
+                <div class="advice-header">
+                    <span class="advice-icon">💡</span>
+                    <h3>Совет по экономии</h3>
+                </div>
+                
+                <p class="advice-text">
+                    {{ advice }}
+                </p>
+
+                {% if comparison %}
+                <div class="comparison-box">
+                    <div class="comparison-row">
+                        <span class="comparison-label">Ваше потребление за месяц:</span>
+                        <span class="comparison-value">{{ comparison.current_kwh }} кВт·ч</span>
+                    </div>
+                    
+                    <div class="comparison-row">
+                        <span class="comparison-label">Среднее среди пользователей:</span>
+                        <span class="comparison-value">{{ comparison.average_kwh }} кВт·ч</span>
+                    </div>
+                    
+                    <div class="comparison-row last-row">
+                        <span class="comparison-label">Результат:</span>
+                        <span class="status-badge {% if comparison.difference <= 0 %}badge-green{% else %}badge-red{% endif %}">
+                            {{ comparison.message }}
+                        </span>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+    
+<script src="{{ url_for('static',filename='script.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('energyChart');
+
+new Chart(ctx, {
+    type: 'pie',
+
+    data: {
+        labels: [
+            'Освещение',
+            'Телевизор',
+            'Компьютер',
+            'Холодильник'
+        ],
+
+        datasets: [{
+            data: [
+                {{ lamp_energy }},
+                {{ tv_energy }},
+                {{ pc_energy }},
+                {{ fridge_energy }}
+            ],
+
+            backgroundColor: [
+                '#22c55e',
+                '#3b82f6',
+                '#f59e0b',
+                '#8b5cf6'
+            ]
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display:false
+            }
+        }
+    }
+});
+
+</script> 
+{% endblock %}
+</main>
+</body>
+</html>
